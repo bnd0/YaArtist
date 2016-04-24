@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">YaArtist</string>
+    <string name="action_exit">Выход</string>
+    <string name="tile_source">Tile source:&#032;</string>
+    <string name="artist_list">Исполнители</string>
+    <string name="bio">Биография</string>
+    <string name="artistPhotoBig">Большое Фото</string>
+
+    <string name="artist_albums">альбомов</string>
+    <string name="artist_album_1">альбом</string>
+    <string name="artist_album_2_4">альбома</string>
+
+    <string name="artist_tracks">песен</string>
+    <string name="artist_track_1">песня</string>
+    <string name="artist_track_2_4">песни</string>
+</resources>

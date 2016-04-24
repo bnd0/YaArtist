@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="pro.thor.yaartist.DetailedInfoActivity">
+
+    <include layout="@layout/include_toolbar"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+                <FrameLayout
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:padding="3dp">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/show_webPic"
+                        android:layout_gravity="center"
+                        android:contentDescription="@string/artistPhotoBig" />
+
+
+                    <ProgressBar
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:indeterminateOnly="true"
+                        android:layout_gravity="center"
+                        android:id="@+id/show_webProgress"/>
+
+                </FrameLayout>
+            <ScrollView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/genres_text_size"
+                        android:id="@+id/show_web_genres"
+                        android:paddingBottom="@dimen/padding_bottom"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/albums_tracks_text_size"
+                        android:id="@+id/show_web_albums_tracks"
+                        android:paddingBottom="@dimen/padding_bottom"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/bio"
+                        android:textSize="@dimen/bio_text_size"
+                        android:paddingTop="@dimen/padding_top"
+                        android:paddingBottom="@dimen/padding_bottom"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/show_web_description"/>
+
+                 </LinearLayout>
+            </ScrollView>
+        </LinearLayout>
+
+
+</LinearLayout>
