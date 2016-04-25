@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -16,7 +17,9 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class MainActivity extends ActionBarActivity {
@@ -27,6 +30,7 @@ public class MainActivity extends ActionBarActivity {
     MyAdapter mAdapter;
     ArrayList<Artist> artistsYandex = new ArrayList<>();
     ArrayList<Integer> failedArtists = new ArrayList<>();
+    boolean isJSONAvailable = true;
 
     IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
     BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -35,10 +39,18 @@ public class MainActivity extends ActionBarActivity {
         {
             if(NetworkInfoLoader.isNetworkAvailable(getApplicationContext()))
             {
-                for (int key : failedArtists) {
-                    mAdapter.notifyItemChanged(key);
+                if(!isJSONAvailable)
+                {
+                    //start JSON handler again
+                    startJSONTask();
                 }
-                failedArtists.clear();
+                else
+                {
+                    for (int key : failedArtists) {
+                        mAdapter.notifyItemChanged(key);
+                    }
+                    failedArtists.clear();
+                }
             }
         }
     };
@@ -50,11 +62,20 @@ public class MainActivity extends ActionBarActivity {
         @Override
         public boolean handleMessage(Message msg)
         {
-            int position = msg.what;
-            int storedPosition = failedArtists.indexOf(position);
-            if(storedPosition == (-1)) failedArtists.add(position);
-            else failedArtists.set(storedPosition, position);
-            //Log.e("TEST: ", String.valueOf(failedArtists.size()));
+                int position = msg.what;
+                if(position==(-1))
+                {
+                    isJSONAvailable = false;
+                    //show message to enable internet
+                    showMessage();
+                }
+                else
+                {
+                    int storedPosition = failedArtists.indexOf(position);
+                    if (storedPosition == (-1)) failedArtists.add(position);
+                    else failedArtists.set(storedPosition, position);
+                    //Log.e("TEST: ", String.valueOf(failedArtists.size()));
+                }
             return true;
         }
     }
@@ -64,6 +85,9 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //create app folder
+        File folder = new File (Environment.getExternalStorageDirectory().getPath()+"/YaArtist");
+        if(!folder.exists()) folder.mkdir();
         //set toolbar
         toolbar = (Toolbar)findViewById(R.id.include_toolbar);
         if(toolbar!=null)
@@ -71,7 +95,8 @@ public class MainActivity extends ActionBarActivity {
             setSupportActionBar(toolbar);
             getSupportActionBar().setTitle(getResources().getString(R.string.artist_list)); //replace standard (app name) toolbar title
         }
-        new StartJSONHandler().execute(this); //start json handling in separate thread
+
+        startJSONTask(); //start json handling in separate thread
 
         mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
 
@@ -87,6 +112,16 @@ public class MainActivity extends ActionBarActivity {
         mAdapter = new MyAdapter(artistsYandex,this,myHandler);
         mRecyclerView.setAdapter(mAdapter);
 
+    }
+
+    public void startJSONTask()
+    {
+        new StartJSONHandler().execute(this); //start json handling in separate thread
+    }
+
+    public void showMessage()
+    {
+        NetworkInfoLoader.EnableInternet(this); //show message to enable internet
     }
 
     @Override
@@ -151,7 +186,7 @@ public class MainActivity extends ActionBarActivity {
         protected ArrayList<Artist> downloadFile(Context context) {
 
             JSONHandler jsonHandler = new JSONHandler();
-            ArrayList<Artist> artists = jsonHandler.ParseData(context);
+            ArrayList<Artist> artists = jsonHandler.ParseData(context, myHandler);
             return artists;
         }
     }

@@ -13,6 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,16 +24,23 @@ public abstract class NetworkInfoLoader
 {
     private static final String TAG = "NetworkInfoLoader";
 
+    Context context;
+
     //case for network connection
     public abstract boolean doJob(String localAddressData, HttpURLConnection connection);
 
     static final String JSON_ADDRESS =
             "http://cache-default06d.cdn.yandex.net/download.cdn.yandex.net/mobilization-2016/artists.json";
     static final String PROGRAM_FOLDER =
-            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath();
+            Environment.getExternalStorageDirectory().getPath()+"/YaArtist";
     static final String JSON_ADDRESS_ON_DEVICE = PROGRAM_FOLDER + "/jsonYandex.json";
 
     private static final int IO_BUFFER = 1024*8;
+    /*
+    public NetworkInfoLoader(Context context)
+    {
+        this.context = context;
+    }*/
 
     //particular case for network connection (bitmap downloading)
     public static boolean doBitJob(String localAddressData, HttpURLConnection connection)
